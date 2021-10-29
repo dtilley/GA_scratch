@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def main(args):
-    if (len(args)==1):
+    if (len(args) == 1):
         print('Evolutionary Algorithm (EA) running in normal model.')
         print('EA is of type (MU,LAMBDA) with an evolutionary strategy.')
         print('Number of Generation(s): '+str(args[0][1]))
