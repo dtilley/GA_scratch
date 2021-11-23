@@ -24,7 +24,7 @@ plt.show()
 kmeans = KMeans(n_clusters=4, init='k-means++', n_init=10)
 
 """ Since make_blobs creates normally-distributed data StandardScaler
-should work well for preprocessing"""
+should produce the same output after preprocessing"""
 scaler = StandardScaler()
 scl_data = scaler.fit_transform(data)
 
