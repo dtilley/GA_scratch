@@ -20,11 +20,15 @@ ax = plt.axes(projection='3d')
 ax.scatter3D(xs=data[:, 0], ys=data[:, 1], zs=data[:, 2], c=clstr)
 plt.show()
 
-# Create kmeans object
-kmeans = KMeans(n_clusters=4, init='k-means++', n_init=10)
+""" Create kmeans object
+        n_init: initializes 10 independent clusters, returns the lowest SSE
+        max_iter: in each initialization the cluster centers are updated at
+                  a maximum of max_iter"""
+kmeans = KMeans(n_clusters=4, init='k-means++', n_init=10, max_iter=300)
 
-""" Since make_blobs creates normally-distributed data StandardScaler
-should produce the same output after preprocessing"""
+""" Make_blobs creates normally-distributed data centered at different locations;
+    StandardScaler centers the entire distribution at 0 and scales the std to be 1
+    for each feature (x,y,z in this case)."""
 scaler = StandardScaler()
 scl_data = scaler.fit_transform(data)
 
