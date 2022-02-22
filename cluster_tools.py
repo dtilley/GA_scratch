@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from kneed import KneeLocator
+from scipy.cluster.hierarchy import fcluster
 from scipy.cluster.hierarchy import dendrogram, linkage
 
 
@@ -55,7 +56,9 @@ def plot_kmeans_silhouette_coeff(data, max_k=11, return_SC=False):
         score = silhouette_score(data, kmeans.labels_)
         sc.append(score)
     k = np.arange(2, max_k)
-    plt.plot(k, sc)
+    n = k[sc.index(max(sc))]
+    plt.plot(k, sc, color='b')
+    plt.axvline(x=n, color='tab:blue', linestyle='--')
     plt.xlabel('k')
     plt.xticks(k)
     plt.ylabel('Silhouette Coefficient')
@@ -73,14 +76,20 @@ def plot_kmeans_silhouette_coeff(data, max_k=11, return_SC=False):
     using the default 'ward' linkage method."""
 
 
-def plot_full_dendrogram(Z):
-    plt.figure()
+def plot_dendrogram(Z, max_d=None):
     plt.xlabel('sample index')
     plt.ylabel('distance')
-    dendrogram(Z,
-               leaf_rotation=90.0,
-               leaf_font_size=8.0)
-    plt.show()
+    if max_d is None:
+        dendrogram(Z, no_labels=True)
+        plt.show()
+    elif type(max_d) is float:
+        dendrogram(Z, no_labels=True)
+        plt.axhline(y=max_d, linestyle='--')
+        plt.show()
+    else:
+        print('max_d error.')
+        dendrogram(Z, no_labels=True)
+        plt.show()
 
 
 def plot_trunc_dendrogram(Z, p=5):
@@ -100,3 +109,11 @@ def get_Z_ward(data):
     Z = linkage(data, 'ward')  # the ward method is bottom -> up euclidean
     # The format of Z; rows: n-1, columns: indx1, indx2, dist, n_individuals
     return(Z)
+
+
+def get_clstrs_dist(Z, max_d):
+    return(fcluster(Z, max_d=max_d, criterion='distance'))
+
+
+def get_clstrs_k(Z, max_k):
+    return(fcluster(Z, max_k, criterion='maxclust'))
